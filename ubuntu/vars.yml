@@ -19,3 +19,4 @@ resource_pool: "<vm_resource_pool>"
 template_name: "<vm_template>"
 ssh_public_key: "<ssh_public_key>"
 install_docker: <bool>
+root_login_enabled: <bool>
