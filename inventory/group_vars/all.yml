@@ -1,0 +1,20 @@
+# vCenter section
+vcenter_hostname: "<vcenter_ip>"
+vcenter_username: "<vcenter_username>"
+vcenter_password: "<vcenter_password>"
+vcenter_datacenter: "<vcenter_datacenter>"
+vcenter_cluster: "<vcenter_cluster>"
+
+#folder
+root_folder: "/{{ vcenter_datacenter }}/vm"
+
+#vm section
+vms: >-
+  [
+    {% for vm_number in range(number_of_vms) %}
+    {
+      "name": "{{  user }}-{{ vm_name_prefix }}{{ '%03d' | format(vm_number+1) }}",
+      "vm_ip": "{{ vm_start_ip | ansible.utils.ipmath(vm_number) }}"
+    },
+    {% endfor %}
+  ]

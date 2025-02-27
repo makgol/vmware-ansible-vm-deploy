@@ -1,0 +1,21 @@
+---
+user: "<username>"
+vm_password: "<os_password>"
+vm_datastore: "<datastore_name>"
+vm_name_prefix: "<vm_name_prefix>"
+vm_domain: "<vm_domain>"
+vm_spec:
+  cpu: <vm_cpu_core>
+  memory: <vm_memory_gb_size>
+  disk_size_gb: <vm_disk_size_gb>
+number_of_vms: <number_of_vms>
+vm_start_ip: "<vm_start_ip>"
+vm_ip_prefix: "<vm_ip_prefix>"
+vm_gateway: "<vm_gateway>"
+vm_dns_server: "<vm_dns_server>"
+vm_port_group: "<vm_port_group>"
+folder_name: "<vm_folder_name>"
+resource_pool: "<vm_resource_pool>"
+template_name: "<vm_template>"
+ssh_public_key: "<ssh_public_key>"
+install_docker: <bool>

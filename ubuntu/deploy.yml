@@ -1,0 +1,12 @@
+---
+- name: Create ubuntu os
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars.yml
+
+  roles:
+    - role: prepare/define-vars
+    - role: prepare/create-folder
+    - role: prepare/create-rp
+    - role: deploy-vm

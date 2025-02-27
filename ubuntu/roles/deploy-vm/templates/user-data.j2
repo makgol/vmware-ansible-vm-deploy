@@ -1,0 +1,66 @@
+#cloud-config
+{% if install_docker %}
+groups:
+  - docker
+{% endif %}
+users:
+- name: ubuntu
+{% if install_docker %}
+  groups:
+    - docker
+{% endif %}
+  lock_passwd: false
+  passwd: {{ vm_password | password_hash('sha512') }}
+  shell: /bin/bash
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  uid: 1000
+  ssh_authorized_keys:
+    - {{ ssh_public_key }}
+write_files:
+  - path: /etc/netplan/999-static.yaml
+    permissions: 0644
+    content: |
+      network:
+        version: 2
+        ethernets:
+          ens192:
+            dhcp4: false
+            dhcp6: false
+            addresses:
+              - {{ item.vm_ip }}/{{ vm_ip_prefix }}
+            nameservers:
+              addresses:
+                - {{ vm_dns_server }}
+            routes:
+              - to: default
+                via: {{ vm_gateway }}
+package_update: true
+package_upgrade: true
+
+{% if install_docker %}
+system_info:
+  default_user:
+    groups: [ docker ]
+
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - unattended-upgrades
+{% endif %}
+
+runcmd:
+{% if install_docker %}
+  - mkdir -p /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - apt-get update
+  - apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - systemctl enable docker
+  - systemctl start docker
+{% endif %}
+  - hostnamectl set-hostname {{ item.name }}.{{ vm_domain }}
+
+final_message: "The system is finally up, after $UPTIME seconds"

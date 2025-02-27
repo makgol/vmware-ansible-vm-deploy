@@ -1,0 +1,28 @@
+---
+- name: Create vm
+  community.vmware.vmware_guest:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: false
+    name: "{{ item.name }}"
+    datacenter: "{{ vcenter_datacenter }}"
+    folder: "{{ abs_folder_path }}"
+    resource_pool: "{{ resource_pool }}"
+    template: "{{ template_name }}"
+    state: "present"
+    disk:
+    - size_gb: "{{ vm_spec.disk_size_gb }}"
+      type: thin
+      datastore: "{{ vm_datastore }}"
+    hardware:
+      memory_mb: "{{ vm_spec.memory | int * 1024 }}"
+      num_cpus: "{{ vm_spec.cpu }}"
+    networks:
+    - name: "{{ vm_port_group }}"
+    vapp_properties:
+      - id: user-data
+        value: "{{ lookup('template', 'user-data.j2') | string | b64encode }}"
+  register: deploy
+  loop: "{{ vms }}"
+    

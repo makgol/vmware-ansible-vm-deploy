@@ -1,0 +1,5 @@
+---
+- name: Define variables
+  ansible.builtin.set_fact:
+    abs_folder_path: "{{ root_folder }}/{{ user }}/{{ folder_name }}"
+

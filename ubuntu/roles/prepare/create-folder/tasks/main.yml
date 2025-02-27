@@ -1,0 +1,10 @@
+- name: Create vm folder
+  community.vmware.vcenter_folder:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: false
+    datacenter_name: "{{ vcenter_datacenter }}"
+    folder_name: "{{ folder_name }}"
+    parent_folder: "{{ user }}"
+    state: "present"
