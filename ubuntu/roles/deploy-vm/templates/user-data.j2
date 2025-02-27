@@ -16,6 +16,15 @@ users:
   uid: 1000
   ssh_authorized_keys:
     - {{ ssh_public_key }}
+{% if root_login_enabled %}
+- name: root
+  ssh_authorized_keys:
+    - {{ ssh_public_key }}
+chpasswd:
+  list: |
+    root:{{ vm_password | password_hash('sha512') }}
+  expire: False
+{% endif %}
 write_files:
   - path: /etc/netplan/999-static.yaml
     permissions: 0644
